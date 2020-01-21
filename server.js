@@ -67,12 +67,13 @@ function collectBookSearchData (request, response){
 // CONSTRUCTORS //
 
 function CreateBook(bookData) {
-  this.title = bookData.title || 'No title available';
-  this.authors = bookData.authors;
-  this.description = bookData.description;
-  this.publishedDate = bookData.publishedDate;
-  this.infoLink = bookData.infoLink;
-  // this.image = bookData.
+  bookData.imageLinks !== undefined ? this.bookImage = bookData.imageLinks.thumbnail.replace('http:', 'https:') : this.bookImage = 'https://i.imgur.com/J5LVHEL.jpg';
+  bookData.title !== undefined ? this.title = bookData.title : this.title = 'No title available';
+  bookData.authors !== undefined ? this.authors = bookData.authors.join(', ') : this.authors = 'no authors available';
+  bookData.description !== undefined ? this.description = bookData.description : this.description = 'no description';
+  // this.publishedDate = bookData.publishedDate;
+  // this.infoLink = bookData.infoLink;
+  // // this.image = bookData.
 }
 
 
