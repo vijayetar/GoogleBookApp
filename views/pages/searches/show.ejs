@@ -16,11 +16,12 @@
 <body>
     <ul>
         <% books.forEach(obj => { %>
-        <h3><%= obj.title %></h3>
-        <p><%= obj.authors %></p>
-        <p><%= obj.publishedDate %></p>
-        <p><%= obj.description %></p>
-        <p><%= obj.infoLink %></p>
+        <img src= '<%= obj.bookImage %>' alt= '<%= obj.title %>''></img> 
+        <li><%= obj.title %></h2>
+        <li><%= obj.authors %></li>
+        <!-- <p><%= obj.publishedDate %></p> -->
+        <li><%= obj.description %></li>
+        <!-- <p><%= obj.infoLink %></p> -->
         <% }) %>
     </ul>
 </body>
