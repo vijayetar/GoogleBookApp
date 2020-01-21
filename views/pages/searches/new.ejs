@@ -5,9 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Vij Cait and Ally Book Club</title>
+
+  <link rel="stylesheet" type="text/css" href="/styles/reset.css"/>
+  <link rel="stylesheet" href="/styles/base.css"/>
+  <link rel="stylesheet" href="/styles/searchFormLayout.css"/>
+  <link rel="stylesheet" href="/styles/icons.css/">
+  <link rel="stylesheet" href="/styles/modules.css"/>
+
 </head>
 <body>
+  <header> 
+    <h1>Best Books!</h1>
+  </header>
   <main>
+    <h2>Search by Title or Author</h2>
     <form action="/searches/new" method="post">
       <input type="text" name="search" placeholder="enter title or author" required>
       <fieldset>
@@ -22,7 +33,7 @@
             <input type="radio" name="search" value="author" required>
           </label>
       </fieldset>
-      <button type="submit">Submit</button>
+      <button type="submit">Search</button>
     </form>
   </main>
  
