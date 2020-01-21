@@ -20,14 +20,15 @@ app.use(express.urlencoded({extended:true}));
 
 //routes
 app.get('/', getHomePage);
-// app.get('/searches/new', displaySearch);
+app.get('/searches/new', displaySearch);
 // app.post('/searches/new', collectBookSearchData);
 
 //functions
 function getHomePage(request,response){
   response.status(200).render('./pages/index');
 }
-
-
+function displaySearch(request, response) {
+  response.status(200).render('./pages/searches/new.ejs');
+}
 
 app.listen(PORT, ()=> (console.log(`Ally,Vij and Cait are chatting on ${PORT}`)));
