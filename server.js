@@ -55,8 +55,10 @@ function collectBookSearchData (request, response){
   .then(agentResults => {
     let bookArray = agentResults.body.items;
     const booksToRender = bookArray.map(book => new CreateBook(book.volumeInfo))
-    console.log(booksToRender);
-    response.status(200).send(booksToRender);
+    response.status(200).render('pages/searches/show.ejs', {books: booksToRender})
+    // response.status(200).render('pages/searches/show.ejs', {books: })
+
+    // response.status(200).send(booksToRender).render;
   }) .catch(error => {
     console.log('this is the catch', error);
   })
@@ -65,7 +67,7 @@ function collectBookSearchData (request, response){
 // CONSTRUCTORS //
 
 function CreateBook(bookData) {
-  this.title = bookData.title;
+  this.title = bookData.title || 'No title available';
   this.authors = bookData.authors;
   this.description = bookData.description;
   this.publishedDate = bookData.publishedDate;
@@ -77,7 +79,7 @@ function CreateBook(bookData) {
 
 /////// ERROR FUNCTIONS /////////
 
-function notFoundHandler(){
+function notFoundHandler(request, response){
   response.status(404).send('This route does not exist');
 }
 
