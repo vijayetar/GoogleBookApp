@@ -6,24 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="/styles/reset.css"/>
-    <link rel="stylesheet" href="/styles/base.css"/>
+    <link rel="stylesheet" type="text/css" href="/styles/reset.css" />
+    <link rel="stylesheet" href="/styles/base.css" />
     <link rel="stylesheet" href="/styles/icons.css/">
-    <link rel="stylesheet" href="/styles/modules.css"/>
-    <link rel="stylesheet" href="/styles/layout.css"/>
+    <link rel="stylesheet" href="/styles/modules.css" />
+    <link rel="stylesheet" href="/styles/layout.css" />
 </head>
 
 <body>
-    <ul>
-        <% books.forEach(obj => { %>
-        <img src= '<%= obj.bookImage %>' alt= '<%= obj.title %>''></img> 
-        <li><%= obj.title %></h2>
-        <li><%= obj.authors %></li>
-        <!-- <p><%= obj.publishedDate %></p> -->
-        <li><%= obj.description %></li>
-        <!-- <p><%= obj.infoLink %></p> -->
-        <% }) %>
-    </ul>
+
+    <form action="/books/details" method="post">
+        <section>
+            <% books.forEach(obj => { %>
+                <img src='<%= obj.image_url %>' alt='<%= obj.title %>''></img> 
+                <h2><%= obj.title %></h2>
+                    <p><%= obj.authors %></p>
+                    <p><%= obj.description %></p>
+                    <p><button type="submit">Add to database</button></p>
+                    <% }) %>
+        </section>
+    </form>
+
 </body>
 
 </html>
