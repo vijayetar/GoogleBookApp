@@ -1,6 +1,6 @@
 /* Mobile */
 
-body {
+/* body {
     margin: auto;
     width: 480px;
     background-color: black;
@@ -8,9 +8,9 @@ body {
 
 main {
     margin: auto;
-    width: 80%;
+    width: 100%;
     background-color: darkgrey;
-    /* text-align: center; */
+    text-align: center;
 }
 
 header {
@@ -64,4 +64,73 @@ input {
     margin-bottom: 20px;
     border: none;
     padding: 15px;
+} */
+
+body {
+    margin: auto;
+    width: 480px;
+    background-color: black;
+}
+
+h1 {
+    height: 70px;
+    line-height: 70px;
+    background-color: black;
+    color: white;
+    font-size: 2em;
+}
+
+main {
+    text-align: center;
+}
+
+h2 {
+    height: 50px;
+    line-height: 50px;
+    background-color: rgb(66, 69, 69);
+    color: white;
+}
+
+form {
+    height: 800px;
+    background-color: rgb(154, 159, 159);
+}
+
+input, label, button {
+    border-radius: 5px;
+    border: none;
+    height: 60px;
+    width: 80%;
+}
+
+input {
+    margin: 3%;
+    margin-top: 6%;
+    font-size: 1em;
+}
+
+label input {
+    margin: 0px;
+    text-align: center;
+}
+
+label {
+    margin: 3% auto;
+    display: flex;
+    line-height: 60px;
+    font-size: 20px;
+    background-color: lightgray;
+}
+
+
+div{
+    margin-right: 5%;
+}
+
+button {
+    background-color: black;
+    margin-top: 3%;
+    color: white;
+    padding: 15px;
+    font-size: 1em;
 }
