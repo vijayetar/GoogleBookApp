@@ -6,6 +6,10 @@ const PORT = process.env.PORT||3001;
 require('ejs');
 const superagent = require('superagent');
 
+const pg = require('pg');
+const client = new pg.Client(process.env.DATABASE_URL);
+client.on('error', err => console.error(err));
+
 const app = express();
 
 //connecting public
@@ -17,12 +21,12 @@ app.set('view engine', 'ejs');
 //bodyParser
 app.use(express.urlencoded({extended:true}));
 
-
 //routes
 app.get('/', getHomePage);
 app.get('/searches/new', displaySearch);
 app.post('/searches/new', collectBookSearchData);
-
+app.get('/books/:id' , showDetails);
+app.post('/books' ,addBookToDb);
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
@@ -56,24 +60,40 @@ function collectBookSearchData (request, response){
     let bookArray = agentResults.body.items;
     const booksToRender = bookArray.map(book => new CreateBook(book.volumeInfo))
     response.status(200).render('pages/searches/show.ejs', {books: booksToRender})
-    // response.status(200).render('pages/searches/show.ejs', {books: })
-
-    // response.status(200).send(booksToRender).render;
   }) .catch(error => {
     console.log('this is the catch', error);
   })
-
 }
+
+function showDetails(request, response) {
+  response.status(200).render('./pages/books/details.ejs');
+}
+
+function addBookToDb(booksToRender) {
+  let {author, title, isbn, image_url, description} = request.body;
+  let SQL = 'INSERT INTO book_table (author, title, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5);';
+  let safeValues = [author, title, isbn, image_url, description];
+
+  return client.query(SQL, safeValues)
+    .then((selectedBook)=> {
+      let SQL = 'SELECT * FROM book_table WHERE id=$1;';
+      let safeValues = [id];
+
+      return client.query(SQL, safeValues)
+      .then(result => response.redirect('/books/${result.rows[0].id}'));
+    })
+}
+
+
+
 // CONSTRUCTORS //
 
 function CreateBook(bookData) {
-  bookData.imageLinks !== undefined ? this.bookImage = bookData.imageLinks.thumbnail.replace('http:', 'https:') : this.bookImage = 'https://i.imgur.com/J5LVHEL.jpg';
+  bookData.imageLinks !== undefined ? this.image_url = bookData.imageLinks.thumbnail.replace('http:', 'https:') : this.image_url = 'https://i.imgur.com/J5LVHEL.jpg';
   bookData.title !== undefined ? this.title = bookData.title : this.title = 'No title available';
   bookData.authors !== undefined ? this.authors = bookData.authors.join(', ') : this.authors = 'no authors available';
   bookData.description !== undefined ? this.description = bookData.description : this.description = 'no description';
-  // this.publishedDate = bookData.publishedDate;
-  // this.infoLink = bookData.infoLink;
-  // // this.image = bookData.
+  this.isbn = bookData.industryIdentifiers[1].identifier;
 }
 
 
