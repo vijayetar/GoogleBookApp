@@ -26,7 +26,7 @@ app.get('/', getHomePage);
 app.get('/searches/new', displaySearch);
 app.post('/searches/new', collectBookSearchData);
 app.get('/books/:id' , showDetails);
-app.post('/books' ,addBookToDb);
+app.post('/books', addBookToDb);
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
@@ -40,7 +40,7 @@ function displaySearch(request, response) {
 }
 
 function collectBookSearchData (request, response){
-  console.log(request.body)
+  // console.log(request.body)
 
   let searchWord = request.body.search[0];
   let searchType = request.body.search[1];
@@ -49,10 +49,10 @@ function collectBookSearchData (request, response){
 
   if (searchType === 'title'){
     url += `+intitle:${searchWord}`;
-    console.log(url)
+    // console.log(url)
   } else {
     url += `+inauthor:${searchWord}`;
-    console.log(url)
+    // console.log(url)
   }
 
   superagent.get(url)
@@ -69,18 +69,26 @@ function showDetails(request, response) {
   response.status(200).render('./pages/books/details.ejs');
 }
 
-function addBookToDb(booksToRender) {
+function addBookToDb(request, response) {
   let {author, title, isbn, image_url, description} = request.body;
+  // console.log('this is author in the body', author);
   let SQL = 'INSERT INTO book_table (author, title, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5);';
   let safeValues = [author, title, isbn, image_url, description];
 
-  return client.query(SQL, safeValues)
-    .then((selectedBook)=> {
-      let SQL = 'SELECT * FROM book_table WHERE id=$1;';
-      let safeValues = [id];
+  client.query(SQL, safeValues)
+    .then(()=> {
+  //     console.log('we are inside the .then of the client query');
+      SQL = 'SELECT * FROM book_table WHERE isbn=$1;';
+      let safeValues = [request.body.isbn];
 
       return client.query(SQL, safeValues)
-      .then(result => response.redirect('/books/${result.rows[0].id}'));
+      .then(result => response.redirect('/books/${result.rows[0].id}'))
+      .catch(() => {
+        errorHandler ('So sorry deeper handler here', request, response);
+      })
+    })
+    .catch(() => {
+      errorHandler ('So sorry outside Location handler here', request, response);
     })
 }
 
@@ -137,5 +145,8 @@ function errorHandler(error, request, response){
 // canonicalVolumeLink: 'https://books.google.com/books/about/UNKNOWN_FACTS_about_HARRYPOTTER_and_HIS.html?hl=&id=PfzkwgEACAAJ'
 
 
-
-app.listen(PORT, ()=> (console.log(`Ally,Vij and Cait are chatting on ${PORT}`)));
+client.connect()
+.then(() => {
+  app.listen(PORT, ()=> (console.log(`Ally,Vij and Cait are chatting on ${PORT}`)));
+})
+.catch(err => console.log('we have problem Houston', err));
