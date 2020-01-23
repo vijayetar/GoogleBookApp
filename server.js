@@ -72,22 +72,25 @@ function showDetails(request, response) {
 }
 
 function addBookToDb(request, response) {
-  // let {authors, title, image_url, description} = request.body;
-  // let authors = request.body.authors;
-  // let title = request.body.title;
-  // let image_url = request.body.image_url;
-  // let description = request.body.description;
+  // let {title, authors, image_url, descript} = request.body;
+  let authors = request.body.authors;
+  let title = request.body.title;
+  let image_url = request.body.image_url;
+  let descript = request.body.descript;
   // let bookshelf = request.body.bookshelf;
 
   console.log('this is request.body', request.body);
   
-  // let SQL = 'INSERT INTO book_table (authors, title, image_url, description, bookshelf) VALUES ($1, $2, $3, $4, $5)returning id;';
+  // let SQL = 'INSERT INTO book_table (authors, title, image_url, descript, bookshelf) VALUES ($1, $2, $3, $4, $5)returning id;';
 
-  // let safeValues = [request.body.authors, request.body.title, request.body.image_url, request.body.description, request.body.bookshelf];
+  // let safeValues = [request.body.authors, request.body.title, request.body.image_url, request.body.descript, request.body.bookshelf];
 
-  let SQL = 'SELECT * book_table;';
+  let SQL = 'INSERT INTO book_table (authors, title, image_url, descript) VALUES ($1, $2, $3, $4);';
 
-  client.query(SQL)
+  let safeValues = [authors, title, image_url, descript];
+
+
+  client.query(SQL, safeValues)
     .then((results) => console.log('We are in side the query', results.rows))
     // .then(()=> {
     //   console.log('we are inside the .then of the client query');
@@ -110,9 +113,9 @@ function addBookToDb(request, response) {
 //   update the DATABAS
 //   redirect to detail page with new info
 //====== code===
-//   let {author, title, isbn, image_url, description} = request.body;
-//   let SQL = `UPDATE book_table SET author=$1 title=$2 isbn=$3 image_url=$4 description=$5;`
-// let values = [author, title, isbn, image_url, description, request.params.id];
+//   let {author, title, isbn, image_url, descript} = request.body;
+//   let SQL = `UPDATE book_table SET author=$1 title=$2 isbn=$3 image_url=$4 descript=$5;`
+// let values = [author, title, isbn, image_url, descript, request.params.id];
 // client.query(SQL,values)
 // .then (response, redirect (`/tasks/${request.params.id}`))
 
@@ -124,7 +127,7 @@ function CreateBook(bookData) {
   bookData.imageLinks !== undefined ? this.image_url = bookData.imageLinks.thumbnail.replace('http:', 'https:') : this.image_url = 'https://i.imgur.com/J5LVHEL.jpg';
   bookData.title !== undefined ? this.title = bookData.title : this.title = 'No title available';
   bookData.authors !== undefined ? this.authors = bookData.authors.join(', ') : this.authors = 'no authors available';
-  bookData.description !== undefined ? this.description = bookData.description : this.description = 'no description';
+  bookData.description !== undefined ? this.descript = bookData.description : this.descript = 'no descript';
   this.isbn = bookData.industryIdentifiers[1].identifier;
 }
 
