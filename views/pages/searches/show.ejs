@@ -15,22 +15,18 @@
 
 <body>
 
-    <form action="/books" method="post">
-        <section>
-            <% books.forEach(obj => { %>
-                <img src='<%= obj.image_url %>' alt='<%= obj.title %>''></img> 
-                <h2><%= obj.title %></h2>
-                    <p><%= obj.authors %></p>
-                    <p><%= obj.description %></p>
-                    <!-- <input type="text" name="title" value= "<%= xxx %>">
-                    <input type="text" name="title" value= "<%= xxx %>">
-                    <input type="text" name="title" value= "<%= xxx %>">
-                    <input type="text" name="title" value= "<%= xxx %>">
-                    <input type="text" name="title" value= "<%= xxx %>"> -->
-                    <p><button type="submit">Add to database</button></p>
-                    <% }) %>
+    <section>
+        <% books.forEach(obj => { %>
+            <form action="/books" method="post">
+                <input name="image_url" value="<%= obj.image_url %>" ></input>
+                <img src="<%= obj.image_url %>" alt="<%= obj.title %>">
+                <input name="title" value="<%= obj.title %>"><%= obj.title %></input>
+                <input name="authors" value="<%= obj.authors %>"><%= obj.authors %></input>
+                <input name="description" value="<%= obj.description %>"><%= obj.description %></input>
+                <button type="submit">Add to database</button>
+            </form>
+            <% }) %>
         </section>
-    </form>
 
 </body>
 

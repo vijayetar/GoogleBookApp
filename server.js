@@ -5,7 +5,7 @@ require('dotenv').config();
 const PORT = process.env.PORT||3001;
 require('ejs');
 const superagent = require('superagent');
-const methodOverride = require('method-override');
+// const methodOverride = require('method-override');
 
 const pg = require('pg');
 const client = new pg.Client(process.env.DATABASE_URL);
@@ -72,25 +72,36 @@ function showDetails(request, response) {
 }
 
 function addBookToDb(request, response) {
-  let {author, title, isbn, image_url, description} = request.body;
-  // console.log('this is author in the body', author);
-  let SQL = 'INSERT INTO book_table (author, title, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5);';
-  let safeValues = [author, title, isbn, image_url, description];
+  // let {authors, title, image_url, description} = request.body;
+  // let authors = request.body.authors;
+  // let title = request.body.title;
+  // let image_url = request.body.image_url;
+  // let description = request.body.description;
+  // let bookshelf = request.body.bookshelf;
 
-  return client.query(SQL, safeValues)
-    .then(()=> {
-  //     console.log('we are inside the .then of the client query');
-      SQL = 'SELECT * FROM book_table WHERE isbn=$1;';
-      let safeValues = [request.body.isbn];
+  console.log('this is request.body', request.body);
+  
+  // let SQL = 'INSERT INTO book_table (authors, title, image_url, description, bookshelf) VALUES ($1, $2, $3, $4, $5)returning id;';
 
-      return client.query(SQL, safeValues)
-      .then(result => response.redirect('/books/${result.rows[0].id}'))
-      .catch(() => {
-        errorHandler ('So sorry deeper handler here', request, response);
-      })
-    })
+  // let safeValues = [request.body.authors, request.body.title, request.body.image_url, request.body.description, request.body.bookshelf];
+
+  let SQL = 'SELECT * book_table;';
+
+  client.query(SQL)
+    .then((results) => console.log('We are in side the query', results.rows))
+    // .then(()=> {
+    //   console.log('we are inside the .then of the client query');
+    //   let SQL2 = 'SELECT * FROM book_table WHERE id=$1;';
+    //   let safeValues2 = [request.body.id];
+
+    //   return client.query(SQL2, safeValues2)
+    //   .then(result => response.redirect(`/books/${result.rows[0].id}`))
+    //   .catch(() => {
+    //     errorHandler ('So sorry deeper handler here', request, response);
+    //   })
+    // })
     .catch(() => {
-      errorHandler ('So sorry outside Location handler here', request, response);
+      errorHandler ('So sorry outside handler here', request, response);
     })
 }
 //========== from class on Jan 22nd===
