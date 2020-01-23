@@ -72,41 +72,43 @@ function showDetails(request, response) {
 }
 
 function addBookToDb(request, response) {
-  // let {title, authors, image_url, descript} = request.body;
   let authors = request.body.authors;
   let title = request.body.title;
   let image_url = request.body.image_url;
   let descript = request.body.descript;
-  // let bookshelf = request.body.bookshelf;
 
   console.log('this is request.body', request.body);
-  
-  // let SQL = 'INSERT INTO book_table (authors, title, image_url, descript, bookshelf) VALUES ($1, $2, $3, $4, $5)returning id;';
-
-  // let safeValues = [request.body.authors, request.body.title, request.body.image_url, request.body.descript, request.body.bookshelf];
 
   let SQL = 'INSERT INTO book_table (authors, title, image_url, descript) VALUES ($1, $2, $3, $4);';
 
   let safeValues = [authors, title, image_url, descript];
 
 
-  client.query(SQL, safeValues)
-    .then((results) => console.log('We are in side the query', results.rows))
-    // .then(()=> {
-    //   console.log('we are inside the .then of the client query');
-    //   let SQL2 = 'SELECT * FROM book_table WHERE id=$1;';
-    //   let safeValues2 = [request.body.id];
-
-    //   return client.query(SQL2, safeValues2)
-    //   .then(result => response.redirect(`/books/${result.rows[0].id}`))
-    //   .catch(() => {
-    //     errorHandler ('So sorry deeper handler here', request, response);
-    //   })
-    // })
+  return client.query(SQL, safeValues)
+    .then(response.redirect('/'))
     .catch(() => {
       errorHandler ('So sorry outside handler here', request, response);
     })
 }
+
+//////RENDER SAVED BOOKS ///// 
+    // .then((results)=> {
+    //   let SQL2 = 'SELECT * FROM book_table WHERE id=$1;';
+    //   let safeValues2 = [request.body.id];
+    //   // console.log('we are inside the .then of the client query', 'results:', results.rows, 'request:', request.body.id);
+      
+    //   return client.query(SQL2, safeValues2)
+    //   .then(console.log('we are inside the .then of the client query', 'results:', results.rows, 'request:', request.body.id))
+    //   // .then(result => response.redirect(`/books/${result.rows[0].id}`))
+    //   // .then(console.log(`${result.rows[0]}`))
+    //   .catch(() => {
+    //     errorHandler ('So sorry deeper handler here', request, response);
+    //   })
+    // })
+
+
+
+
 //========== from class on Jan 22nd===
 // function updateTask(req,res){
 //   collecct the info from the fomr for details views
