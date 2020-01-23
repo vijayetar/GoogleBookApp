@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS book_table (
     title VARCHAR(255),
     authors VARCHAR(255),
     image_url VARCHAR(255),
-    description VARCHAR (1000000000000000),
+    descript VARCHAR,
     bookshelf VARCHAR(255)
 );
 
-INSERT INTO book_table (authors, title, image_url, description, bookshelf) VALUES ('Vij', 'Vij', 'Vij', 'vij', 'vijjjjj');
+INSERT INTO book_table (authors, title, image_url, descript, bookshelf) VALUES ('Vij', 'Vij', 'Vij', 'vij', 'vijjjjj');
