@@ -24,7 +24,8 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended:true}));
 
 //routes
-app.get('/', getHomePage);
+// app.get('/', getHomePage);
+app.get('/', showFavBooks);
 app.get('/searches/new', displaySearch);
 app.post('/searches/new', collectBookSearchData);
 app.get('/books/:id' , showDetails);
@@ -33,9 +34,9 @@ app.use('*', notFoundHandler);
 app.use(errorHandler);
 
 //functions
-function getHomePage(request,response){
-  response.status(200).render('./pages/index');
-}
+// function getHomePage(request,response){
+//   response.status(200).render('./pages/index');
+// }
 
 function displaySearch(request, response) {
   response.status(200).render('./pages/searches/new.ejs');
@@ -92,6 +93,19 @@ function addBookToDb(request, response) {
 }
 
 //////RENDER SAVED BOOKS ///// 
+function showFavBooks (request, response){
+  let sql3 = 'SELECT * FROM book_table;';
+  client.query(sql3)
+    .then(results => {
+      console.log('these are the results', results.rows);
+      response.send(results.rows);
+      // response.status(200).send('/', results.rows);
+    })
+    .catch(() => {
+      errorHandler ('So sorry saved books handler here', request, response);
+    })
+}
+
     // .then((results)=> {
     //   let SQL2 = 'SELECT * FROM book_table WHERE id=$1;';
     //   let safeValues2 = [request.body.id];
@@ -130,7 +144,6 @@ function CreateBook(bookData) {
   bookData.title !== undefined ? this.title = bookData.title : this.title = 'No title available';
   bookData.authors !== undefined ? this.authors = bookData.authors.join(', ') : this.authors = 'no authors available';
   bookData.description !== undefined ? this.descript = bookData.description : this.descript = 'no descript';
-  this.isbn = bookData.industryIdentifiers[1].identifier;
 }
 
 
