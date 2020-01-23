@@ -72,10 +72,10 @@ function showDetails(request, response) {
 }
 
 function addBookToDb(request, response) {
-  // let {authors, title, image_url, description} = request.body;
-  // let authors = request.body.authors;
-  // let title = request.body.title;
-  // let image_url = request.body.image_url;
+  // let {title, authors, image_url, description} = request.body;
+  let authors = request.body.authors;
+  let title = request.body.title;
+  let image_url = request.body.image_url;
   // let description = request.body.description;
   // let bookshelf = request.body.bookshelf;
 
@@ -85,9 +85,12 @@ function addBookToDb(request, response) {
 
   // let safeValues = [request.body.authors, request.body.title, request.body.image_url, request.body.description, request.body.bookshelf];
 
-  let SQL = 'SELECT * book_table;';
+  let SQL = 'INSERT INTO book_table (authors, title, image_url) VALUES ($1, $2, $3);';
 
-  client.query(SQL)
+  let safeValues = [authors, title, image_url];
+
+
+  client.query(SQL, safeValues)
     .then((results) => console.log('We are in side the query', results.rows))
     // .then(()=> {
     //   console.log('we are inside the .then of the client query');
