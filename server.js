@@ -98,7 +98,7 @@ function showFavBooks (request, response){
   client.query(sql3)
     .then(results => {
       console.log('these are the results', results.rows);
-      response.send(results.rows);
+      response.render('pages/index', {results: results.rows});
       // response.status(200).send('/', results.rows);
     })
     .catch(() => {
