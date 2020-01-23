@@ -17,14 +17,17 @@
     <h1>Hi, Cait, Vij, Ally! Lets read some books together</h1>
     <ul>
     <% results.forEach(obj => { %>
-
-      
-           <li><%= obj.title %></li>
-           <li><%= obj.authors %></li>
-           
-           <% }) %>
+      <form action="/details/<%= obj.id %>" method="post">
+        <li><%= obj.title %></li>
+        <li><%= obj.authors %></li>
+        <button>view details</button>
+      </form>
+        
+        <% }) %>
           </ul>
     </section>
+
+
 
 </body>
 </html>
