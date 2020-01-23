@@ -5,7 +5,7 @@ require('dotenv').config();
 const PORT = process.env.PORT||3001;
 require('ejs');
 const superagent = require('superagent');
-const methodOverride = require('method-override');
+// const methodOverride = require('method-override');
 
 const pg = require('pg');
 const client = new pg.Client(process.env.DATABASE_URL);
@@ -73,7 +73,7 @@ function showDetails(request, response) {
 
 function addBookToDb(request, response) {
   let {author, title, isbn, image_url, description} = request.body;
-  // console.log('this is author in the body', author);
+  console.log(request.body);
   let SQL = 'INSERT INTO book_table (author, title, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5);';
   let safeValues = [author, title, isbn, image_url, description];
 
