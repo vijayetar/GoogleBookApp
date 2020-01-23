@@ -5,6 +5,7 @@ require('dotenv').config();
 const PORT = process.env.PORT||3001;
 require('ejs');
 const superagent = require('superagent');
+const methodOverride = require('method-override');
 
 const pg = require('pg');
 const client = new pg.Client(process.env.DATABASE_URL);
@@ -14,6 +15,7 @@ const app = express();
 
 //connecting public
 app.use(express.static('./public'));
+// app.use((methodOverride('_method')));
 
 //set up the view engine
 app.set('view engine', 'ejs'); 
@@ -75,7 +77,7 @@ function addBookToDb(request, response) {
   let SQL = 'INSERT INTO book_table (author, title, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5);';
   let safeValues = [author, title, isbn, image_url, description];
 
-  client.query(SQL, safeValues)
+  return client.query(SQL, safeValues)
     .then(()=> {
   //     console.log('we are inside the .then of the client query');
       SQL = 'SELECT * FROM book_table WHERE isbn=$1;';
@@ -91,8 +93,19 @@ function addBookToDb(request, response) {
       errorHandler ('So sorry outside Location handler here', request, response);
     })
 }
+//========== from class on Jan 22nd===
+// function updateTask(req,res){
+//   collecct the info from the fomr for details views
+//   update the DATABAS
+//   redirect to detail page with new info
+//====== code===
+//   let {author, title, isbn, image_url, description} = request.body;
+//   let SQL = `UPDATE book_table SET author=$1 title=$2 isbn=$3 image_url=$4 description=$5;`
+// let values = [author, title, isbn, image_url, description, request.params.id];
+// client.query(SQL,values)
+// .then (response, redirect (`/tasks/${request.params.id}`))
 
-
+// }
 
 // CONSTRUCTORS //
 
@@ -116,34 +129,6 @@ function errorHandler(error, request, response){
   console.log('Error', error);
   response.status(500).send(error);
 }
-
-// function constructArray(arr, constructor){
-//   arr.map(obj => {
-//     new constructor(obj);
-//   })
-// }
-
-
-// title: 'UNKNOWN FACTS about HARRYPOTTER and HIS SPELLS',
-// authors: [ 'peter potter' ],
-// publishedDate: '2018-12-30',
-// description: 'Collection of harry potter facts. This will surely satisfy the harry potter fans. This will gives a brief explanations of UNKNOWN FACTS ABOUT HARRYPOTTER & HIS SPELLS',
-// industryIdentifiers: [
-//   { type: 'ISBN_10', identifier: '1792905912' },
-//   { type: 'ISBN_13', identifier: '9781792905919' }
-// ],
-// readingModes: { text: false, image: false },
-// pageCount: 38,
-// printType: 'BOOK',
-// maturityRating: 'NOT_MATURE',
-// allowAnonLogging: false,
-// contentVersion: 'preview-1.0.0',
-// panelizationSummary: { containsEpubBubbles: false, containsImageBubbles: false },
-// language: 'en',
-// previewLink: 'http://books.google.com/books?id=PfzkwgEACAAJ&dq=intitle:harrypotter&hl=&cd=1&source=gbs_api',
-// infoLink: 'http://books.google.com/books?id=PfzkwgEACAAJ&dq=intitle:harrypotter&hl=&source=gbs_api',
-// canonicalVolumeLink: 'https://books.google.com/books/about/UNKNOWN_FACTS_about_HARRYPOTTER_and_HIS.html?hl=&id=PfzkwgEACAAJ'
-
 
 client.connect()
 .then(() => {
