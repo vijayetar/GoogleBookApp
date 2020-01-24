@@ -41,16 +41,17 @@ app.use(errorHandler);
 
 function findDetails(request, response) {
   //go into db and find book with unique id
-  let SQL = 'SELECT * FROM book_table WHERE id=$1;';
+  let SQL5 = 'SELECT * FROM book_table WHERE id=$1;';
   let values = [request.params.id];
 
   //render to page details.ejs
-  return client.query(SQL, values)
+  return client.query(SQL5, values)
     .then((results) => {
-      response.render('pages/books/details', {results: results.rows[0]});
+      console.log('these are the results for the selected book', results);
+      response.render('pages/books/details', {books: results.rows});
     })
     .catch(() => {
-      errorHandler ('can find details here!', request, response);
+      errorHandler ('cannot find details here!', request, response);
     });
 }
 
@@ -114,14 +115,17 @@ function showFavBooks (request, response){
   let sql3 = 'SELECT * FROM book_table;';
   client.query(sql3)
     .then(results => {
-      console.log('these are the results', results.rows);
+      // console.log('these are the results', results.rows);
       response.render('pages/index', {results: results.rows});
       // response.status(200).send('/', results.rows);
     })
     .catch(() => {
       errorHandler ('So sorry saved books handler here', request, response);
     });
+  
 }
+
+
 
 // .then((results)=> {
 //   let SQL2 = 'SELECT * FROM book_table WHERE id=$1;';

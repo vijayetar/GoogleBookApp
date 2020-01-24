@@ -12,6 +12,25 @@
         <link rel="stylesheet" href="/styles/layout.css" />
 </head>
 <body>
-    Success!!
+   
+        <section>
+
+        
+                   <ul>
+                       <li><img src="<%= books.image_url %>" alt="<%= books.title %>"></li>
+                       <li><%= books.title %></li>
+                       <li><%= books.authors %></li>
+                       <li><%= books.descript %></li>
+                   </ul>
+        
+                    <form action="/books" method="post">
+                        <input type= "hidden" name="image_url" value="<%= books.image_url %>" ></input>
+                        <input type= "hidden" name="title" value="<%= books.title %>"><%= books.title %></input>
+                        <input type= "hidden" name="authors" value="<%= books.authors %>"><%= books.authors %></input>
+                        <input type= "hidden" name="descript" value="<%= books.descript %>"><%= books.descript %></input>
+                        <button type="submit">Update Book</button>
+                    </form>
+
+        </section>
 </body>
 </html>
