@@ -1,0 +1,9 @@
+
+<% let action = formAction === 'update' ? `/update/${results.id}?_method=PUT` : '/update'; %>
+
+<form action="<%= action %>" method="post">
+  <input type="hidden" name="title" value="<%- results.title %>" placeholder="<%- results.title %>">
+  <input type="hidden" name="authors" value="<%- results.authors %>" placeholder="<%- results.authors %>">
+  <input type="hidden" name="descript" placeholder=<%- results.descript %>>
+  <button type="submit"><%- 'update' === formAction ? "Update Bookshelf" : "Add This Task" %></button>
+</form>
