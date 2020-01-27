@@ -33,6 +33,7 @@ app.post('/books/:id', showDetails);
 
 /// update and delete
 app.put('/update/:id', updateBook);
+app.delete('/books/:id', deleteBook);
 
 // error handlers routes
 app.use('*', notFoundHandler);
@@ -42,7 +43,7 @@ function deleteBook (request,response){
   console.log('I am trying to delete this book', request.body);
   let SQL6 = `DELETE FROM book_table WHERE id=$1;`;
   let values = [request.params.id]
-  response.status(200).redirect('./pages/index.ejs')
+
   client.query(SQL6, values)
   .then(response.redirect('/'))
   .catch(() => {
