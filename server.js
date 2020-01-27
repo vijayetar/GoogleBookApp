@@ -27,7 +27,7 @@ app.use(express.urlencoded({extended:true}));
 app.get('/', showFavBooks);
 app.get('/searches/new', displaySearch);
 app.post('/searches/new', collectBookSearchData);
-app.get('/books/:id' , findDetails);
+app.get('/books/:id', findDetails);
 app.post('/books', addBookToDb);
 app.post('/books/:id', showDetails);
 
@@ -38,17 +38,29 @@ app.put('/update/:id', updateBook);
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
+function deleteBook (request,response){
+  console.log('I am trying to delete this book', request.body);
+  let SQL6 = `DELETE FROM book_table WHERE id=$1;`;
+  let values = [request.params.id]
+  response.status(200).redirect('./pages/index.ejs')
+  client.query(SQL6, values)
+  .then(response.redirect('/'))
+  .catch(() => {
+    errorHandler ('cannot delete request here!', request, response);
+  });
+}
 
 function updateBook(request, response) {
   // destructure variables
   let { title, descript, authors, bookshelf } = request.body;
   let SQL4 = `UPDATE book_table SET title=$1, descript=$2, authors=$3, bookshelf=$4 WHERE id=$5;`;
   let valuesagain = [title, descript, authors, bookshelf, request.params.id];
-  console.log('these are the values to update into the database', valuesagain)
 
   client.query(SQL4, valuesagain)
     .then(response.redirect(`/books/${request.params.id}`))
-    .catch(err => handleError(err, response));
+    .catch(() => {
+      errorHandler ('cannot update book!', request, response);
+    });
 }
 
 
@@ -57,18 +69,15 @@ function findDetails(request, response) {
   //go into db and find book with unique id
   let SQL = 'SELECT * FROM book_table WHERE id=$1;';
   let values = [request.params.id];
-  console.log('hey you wanted to see this from the index page', values)
   //render to page details.ejs
   return client.query(SQL, values)
     .then((results) => {
-      console.log('these are ther results from our findDetails query!!!!!!', results.rows[0]);
       response.render('./pages/books/details.ejs', {results: results.rows[0]});
     })
     .catch(() => {
-      errorHandler ('can find details here!', request, response);
+      errorHandler ('cannot find details here!', request, response);
     });
 }
-
 
 function displaySearch(request, response) {
   response.status(200).render('./pages/searches/new.ejs');
@@ -125,7 +134,6 @@ function showFavBooks (request, response){
   let sql3 = 'SELECT * FROM book_table;';
   client.query(sql3)
     .then(results => {
-      console.log('these are the results', results.rows);
       response.render('pages/index', {results: results.rows});
     })
     .catch(() => {
@@ -133,22 +141,6 @@ function showFavBooks (request, response){
     });
 }
 
-
-
-
-//========== from class on Jan 22nd===
-// function updateTask(req,res){
-//   collecct the info from the fomr for details views
-//   update the DATABAS
-//   redirect to detail page with new info
-//====== code===
-//   let {author, title, isbn, image_url, descript} = request.body;
-//   let SQL = `UPDATE book_table SET author=$1 title=$2 isbn=$3 image_url=$4 descript=$5;`
-// let values = [author, title, isbn, image_url, descript, request.params.id];
-// client.query(SQL,values)
-// .then (response, redirect (`/tasks/${request.params.id}`))
-
-// }
 
 // CONSTRUCTORS //
 
