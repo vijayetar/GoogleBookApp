@@ -10,8 +10,8 @@
     <h1>Hi, Cait, Vij, Ally! Lets read some books together</h1>
     <ul>
     <% results.forEach(obj => { %>
-        <li><%= obj.title %></li>
-        <li><%= obj.authors %></li>
+        <li id="title"><%= obj.title %></li>
+        <li>By <%= obj.authors %></li>
         <li><img src="<%= obj.image_url %>" alt="<%= obj.title %>"></li>
         <li><%= obj.bookshelf %></li>
         <a href="/books/<%= obj.id %>"> View Details </a>

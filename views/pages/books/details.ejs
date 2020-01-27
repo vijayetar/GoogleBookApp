@@ -5,17 +5,19 @@
 
 </head>
 <body>
+    <main>
         <%- include('../../layout/header') %>
 
     <ul>
-        <li><%= results.title %></li>
-        <li><%= results.authors %></li>
+        <li id="title"><%= results.title %></li>
+        <li>By <%= results.authors %></li>
         <li><%= results.descript %></li>
         <li><img src="<%= results.image_url %>" alt="<%= results.title %>"></li>
-        <li><%= results.bookshelf %></li>
+        <li>Bookshelf: <%= results.bookshelf %></li>
 
     </ul>
-    <%- include('edit_delete', {formAction: 'delete', results: results}) %>
-    <%- include('edit', {formAction: 'update', results: results}) %>
+        <%- include('edit_delete', {formAction: 'delete', results: results}) %>
+        <%- include('edit', {formAction: 'update', results: results}) %>
+    </main>
 </body>
 </html>
