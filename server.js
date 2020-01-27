@@ -24,30 +24,26 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended:true}));
 
 //routes
-// app.get('/', getHomePage);
 app.get('/', showFavBooks);
 app.get('/searches/new', displaySearch);
 app.post('/searches/new', collectBookSearchData);
-app.get('/books/details/:id' , findDetails);
+app.get('/books/:id' , findDetails);
 app.post('/books', addBookToDb);
-app.post('/details/:id', showDetails);
+app.post('/books/:id', showDetails);
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
-//functions
-// function getHomePage(request,response){
-//   response.status(200).render('./pages/index');
-// }
 
 function findDetails(request, response) {
   //go into db and find book with unique id
   let SQL = 'SELECT * FROM book_table WHERE id=$1;';
   let values = [request.params.id];
-
+  console.log('hey you wanted to see this from the index page', values)
   //render to page details.ejs
   return client.query(SQL, values)
     .then((results) => {
-      response.render('pages/books/details', {results: results.rows[0]});
+      console.log('these are ther results from our findDetails query!!!!!!', results.rows[0]);
+      response.render('./pages/books/details.ejs', {results: results.rows[0]});
     })
     .catch(() => {
       errorHandler ('can find details here!', request, response);
@@ -60,7 +56,6 @@ function displaySearch(request, response) {
 }
 
 function collectBookSearchData (request, response){
-  // console.log(request.body)
 
   let searchWord = request.body.search[0];
   let searchType = request.body.search[1];
@@ -69,10 +64,8 @@ function collectBookSearchData (request, response){
 
   if (searchType === 'title'){
     url += `+intitle:${searchWord}`;
-    // console.log(url)
   } else {
     url += `+inauthor:${searchWord}`;
-    // console.log(url)
   }
 
   superagent.get(url)
@@ -86,6 +79,8 @@ function collectBookSearchData (request, response){
 }
 
 function showDetails(request, response) {
+    console.log('hi Vij, be patient');
+
   response.status(200).render('./pages/books/details.ejs');
 }
 
@@ -95,15 +90,12 @@ function addBookToDb(request, response) {
   let image_url = request.body.image_url;
   let descript = request.body.descript;
 
-  console.log('this is request.body', request.body);
-
   let SQL = 'INSERT INTO book_table (authors, title, image_url, descript) VALUES ($1, $2, $3, $4) RETURNING id;';
 
   let safeValues = [authors, title, image_url, descript];
 
-
   return client.query(SQL, safeValues)
-    .then(result => response.redirect(`/books/details/${result.rows[0].id}`))
+    .then(result => response.redirect(`/books/${result.rows[0].id}`))
     .catch(() => {
       errorHandler ('So sorry outside handler here', request, response);
     });
@@ -116,26 +108,11 @@ function showFavBooks (request, response){
     .then(results => {
       console.log('these are the results', results.rows);
       response.render('pages/index', {results: results.rows});
-      // response.status(200).send('/', results.rows);
     })
     .catch(() => {
       errorHandler ('So sorry saved books handler here', request, response);
     });
 }
-
-// .then((results)=> {
-//   let SQL2 = 'SELECT * FROM book_table WHERE id=$1;';
-//   let safeValues2 = [request.body.id];
-//   // console.log('we are inside the .then of the client query', 'results:', results.rows, 'request:', request.body.id);
-
-//   return client.query(SQL2, safeValues2)
-//   .then(console.log('we are inside the .then of the client query', 'results:', results.rows, 'request:', request.body.id))
-//   // .then(result => response.redirect(`/books/${result.rows[0].id}`))
-//   // .then(console.log(`${result.rows[0]}`))
-//   .catch(() => {
-//     errorHandler ('So sorry deeper handler here', request, response);
-//   })
-// })
 
 
 

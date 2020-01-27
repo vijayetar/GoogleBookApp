@@ -12,6 +12,14 @@
         <link rel="stylesheet" href="/styles/layout.css" />
 </head>
 <body>
-    Success!!
+        <a href="/"> Home Page </a>
+    <ul>
+        <li><%= results.title %></li>
+        <li><%= results.authors %></li>
+        <li><%= results.descript %></li>
+        <li><img src="<%= results.image_url %>" alt="<%= results.title %>"></li>
+        <li><%= results.bookshelf %></li>
+
+    </ul>
 </body>
 </html>

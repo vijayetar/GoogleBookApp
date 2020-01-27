@@ -17,11 +17,10 @@
     <h1>Hi, Cait, Vij, Ally! Lets read some books together</h1>
     <ul>
     <% results.forEach(obj => { %>
-      <form action="/details/<%= obj.id %>" method="post">
         <li><%= obj.title %></li>
         <li><%= obj.authors %></li>
-        <button>view details</button>
-      </form>
+        <li><img src="<%= obj.image_url %>" alt="<%= obj.title %>"></li>
+        <a href="/books/<%= obj.id %>"> View Details </a>
         
         <% }) %>
           </ul>
