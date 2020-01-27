@@ -5,7 +5,7 @@ require('dotenv').config();
 const PORT = process.env.PORT||3001;
 require('ejs');
 const superagent = require('superagent');
-// const methodOverride = require('method-override');
+const methodOverride = require('method-override');
 
 const pg = require('pg');
 const client = new pg.Client(process.env.DATABASE_URL);
@@ -15,7 +15,7 @@ const app = express();
 
 //connecting public
 app.use(express.static('./public'));
-// app.use((methodOverride('_method')));
+app.use((methodOverride('_method')));
 
 //set up the view engine
 app.set('view engine', 'ejs');
@@ -23,15 +23,34 @@ app.set('view engine', 'ejs');
 //bodyParser
 app.use(express.urlencoded({extended:true}));
 
-//routes
+////routes
 app.get('/', showFavBooks);
 app.get('/searches/new', displaySearch);
 app.post('/searches/new', collectBookSearchData);
 app.get('/books/:id' , findDetails);
 app.post('/books', addBookToDb);
 app.post('/books/:id', showDetails);
+
+/// update and delete
+app.put('/update/:id', updateBook);
+
+// error handlers routes
 app.use('*', notFoundHandler);
 app.use(errorHandler);
+
+
+function updateBook(request, response) {
+  // destructure variables
+  let { title, descript, authors, bookshelf } = request.body;
+  let SQL4 = `UPDATE book_table SET title=$1, descript=$2, authors=$3, bookshelf=$4 WHERE id=$5;`;
+  let valuesagain = [title, descript, authors, bookshelf, request.params.id];
+  console.log('these are the values to update into the database', valuesagain)
+
+  client.query(SQL4, valuesagain)
+    .then(response.redirect(`/books/${request.params.id}`))
+    .catch(err => handleError(err, response));
+}
+
 
 
 function findDetails(request, response) {
