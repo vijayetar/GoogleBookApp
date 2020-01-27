@@ -1,0 +1,41 @@
+
+@media screen and (max-width: 2000px) {
+
+  body {
+  margin: auto;
+  width: 100%;
+  background-color: black;
+  }
+
+  h1 {
+  height: 70px;
+  line-height: 70px;
+  background-color: black;
+  color: white;
+  font-size: 2em;
+  }
+
+  main {
+  text-align: center;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 100%;
+  }
+
+  h2 {
+  height: 50px;
+  line-height: 50px;
+  background-color: rgb(66, 69, 69);
+  color: white;
+  }
+
+  ul{
+  box-sizing: border-box;
+  background-color: azure;
+  display: flexbox; 
+  flex: auto;
+
+  }
+};
+
