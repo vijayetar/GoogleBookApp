@@ -1,0 +1,14 @@
+
+<% let action = formAction === 'delete' ? `/books/${results.id}?_method=DELETE` : '/update'; %>
+
+<form action="<%= action %>" method="post">
+  <input type="hidden" name="title" value="<%- results.title %>" placeholder="<%- results.title %>">
+
+  <input type="hidden" name="authors" value="<%- results.authors %>" placeholder="<%- results.authors %>">
+
+  <input type="hidden" name="descript" value= "<%- results.descript %>" placeholder="<%- results.descript %>">
+
+  <input type="hidden" name="id" value="<%- results.id %>">
+  <button name="delete">Delete From Database</button>
+
+  </form> 

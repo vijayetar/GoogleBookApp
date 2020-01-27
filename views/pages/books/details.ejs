@@ -15,6 +15,7 @@
         <li><%= results.bookshelf %></li>
 
     </ul>
+    <%- include('edit_delete', {formAction: 'delete', results: results}) %>
     <%- include('edit', {formAction: 'update', results: results}) %>
 </body>
 </html>
