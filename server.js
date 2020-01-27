@@ -24,7 +24,6 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended:true}));
 
 //routes
-// app.get('/', getHomePage);
 app.get('/', showFavBooks);
 app.get('/searches/new', displaySearch);
 app.post('/searches/new', collectBookSearchData);
@@ -39,7 +38,7 @@ function findDetails(request, response) {
   //go into db and find book with unique id
   let SQL = 'SELECT * FROM book_table WHERE id=$1;';
   let values = [request.params.id];
-  console.log(values)
+  console.log('hey you wanted to see this from the index page', values)
   //render to page details.ejs
   return client.query(SQL, values)
     .then((results) => {
@@ -57,7 +56,6 @@ function displaySearch(request, response) {
 }
 
 function collectBookSearchData (request, response){
-  // console.log(request.body)
 
   let searchWord = request.body.search[0];
   let searchType = request.body.search[1];
@@ -66,10 +64,8 @@ function collectBookSearchData (request, response){
 
   if (searchType === 'title'){
     url += `+intitle:${searchWord}`;
-    // console.log(url)
   } else {
     url += `+inauthor:${searchWord}`;
-    // console.log(url)
   }
 
   superagent.get(url)
@@ -94,12 +90,9 @@ function addBookToDb(request, response) {
   let image_url = request.body.image_url;
   let descript = request.body.descript;
 
-  console.log('this is request.body', request.body);
-
   let SQL = 'INSERT INTO book_table (authors, title, image_url, descript) VALUES ($1, $2, $3, $4) RETURNING id;';
 
   let safeValues = [authors, title, image_url, descript];
-
 
   return client.query(SQL, safeValues)
     .then(result => response.redirect(`/books/${result.rows[0].id}`))
@@ -120,20 +113,6 @@ function showFavBooks (request, response){
       errorHandler ('So sorry saved books handler here', request, response);
     });
 }
-
-// .then((results)=> {
-//   let SQL2 = 'SELECT * FROM book_table WHERE id=$1;';
-//   let safeValues2 = [request.body.id];
-//   // console.log('we are inside the .then of the client query', 'results:', results.rows, 'request:', request.body.id);
-
-//   return client.query(SQL2, safeValues2)
-//   .then(console.log('we are inside the .then of the client query', 'results:', results.rows, 'request:', request.body.id))
-//   // .then(result => response.redirect(`/books/${result.rows[0].id}`))
-//   // .then(console.log(`${result.rows[0]}`))
-//   .catch(() => {
-//     errorHandler ('So sorry deeper handler here', request, response);
-//   })
-// })
 
 
 
