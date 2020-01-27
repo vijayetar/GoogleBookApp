@@ -3,7 +3,19 @@
 
 <form action="<%= action %>" method="post">
   <input type="hidden" name="title" value="<%- results.title %>" placeholder="<%- results.title %>">
+
   <input type="hidden" name="authors" value="<%- results.authors %>" placeholder="<%- results.authors %>">
-  <input type="hidden" name="descript" placeholder=<%- results.descript %>>
-  <button type="submit"><%- 'update' === formAction ? "Update Bookshelf" : "Add This Task" %></button>
+
+  <input type="hidden" name="descript" value= "<%- results.descript %>" placeholder="<%- results.descript %>">
+
+    <input list="bookshelf" name="bookshelf">
+
+    <datalist id="bookshelf">
+    <option name="bookshelf" value="fiction">
+    <option name="bookshelf" value="non-fiction">
+    <option name="bookshelf" value = "drama">
+    </datalist>
+
+  <input type="submit">
+
 </form>

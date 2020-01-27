@@ -42,8 +42,9 @@ app.use(errorHandler);
 function updateBook(request, response) {
   // destructure variables
   let { title, descript, authors, bookshelf } = request.body;
-  let SQL4 = `UPDATE tasks SET title=$1, descript=$2, authors=$3, bookshelf=$4 WHERE id=$5;`;
+  let SQL4 = `UPDATE book_table SET title=$1, descript=$2, authors=$3, bookshelf=$4 WHERE id=$5;`;
   let valuesagain = [title, descript, authors, bookshelf, request.params.id];
+  console.log('these are the values to update into the database', valuesagain)
 
   client.query(SQL4, valuesagain)
     .then(response.redirect(`/books/${request.params.id}`))
