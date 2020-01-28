@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS book_table;
 
-CREATE TABLE IF NOT EXISTS book_table (
+CREATE TABLE book_table (
     id SERIAL PRIMARY KEY, 
     title VARCHAR(255),
     authors VARCHAR(255),
