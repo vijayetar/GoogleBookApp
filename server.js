@@ -133,7 +133,7 @@ function addBookToDb(request, response) {
 //////RENDER SAVED BOOKS /////
 function showFavBooks (request, response){
   let sql3 = 'SELECT * FROM book_table;';
-  client.query(sql3)
+  return client.query(sql3)
     .then(results => {
       response.render('pages/index', {results: results.rows});
     })
