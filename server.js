@@ -58,7 +58,7 @@ function updateBook(request, response) {
   let valuesagain = [title, descript, authors, bookshelf, request.params.id];
 
   client.query(SQL4, valuesagain)
-    .then(response.redirect(`/books/${request.params.id}`))
+    .then(response.redirect(`./books/${request.params.id}`))
     .catch(() => {
       errorHandler ('cannot update book!', request, response);
     });
@@ -101,7 +101,7 @@ function collectBookSearchData (request, response){
     .then(agentResults => {
       let bookArray = agentResults.body.items;
       const booksToRender = bookArray.map(book => new CreateBook(book.volumeInfo));
-      response.status(200).render('pages/searches/show.ejs', {books: booksToRender});
+      response.status(200).render('./pages/searches/show.ejs', {books: booksToRender});
     }) .catch(error => {
       console.log('this is the catch', error);
     });
@@ -135,7 +135,7 @@ function showFavBooks (request, response){
   let sql3 = 'SELECT * FROM book_table;';
   return client.query(sql3)
     .then(results => {
-      response.render('pages/index', {results: results.rows});
+      response.render('./pages/index', {results: results.rows});
     })
     .catch(() => {
       errorHandler ('So sorry saved books handler here', request, response);
