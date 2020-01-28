@@ -5,6 +5,6 @@ CREATE TABLE book_table (
     title VARCHAR(255),
     authors VARCHAR(255),
     image_url VARCHAR(255),
-    descript VARCHAR,
+    descript TEXT,
     bookshelf VARCHAR(255)
 );
