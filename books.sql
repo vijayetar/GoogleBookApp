@@ -8,5 +8,3 @@ CREATE TABLE book_table (
     descript VARCHAR,
     bookshelf VARCHAR(255)
 );
-
-INSERT INTO book_table (authors, title, image_url, descript, bookshelf) VALUES ('Vij', 'Vij', 'Vij', 'vij', 'vijjjjj');
