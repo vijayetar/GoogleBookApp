@@ -40,7 +40,7 @@ app.use('*', notFoundHandler);
 app.use(errorHandler);
 
 function deleteBook (request,response){
-  console.log('I am trying to delete this book', request.body);
+  // console.log('I am trying to delete this book', request.body);
   let SQL6 = `DELETE FROM book_table WHERE id=$1;`;
   let values = [request.params.id]
 
