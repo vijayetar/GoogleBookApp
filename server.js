@@ -54,27 +54,39 @@ function updateBook(request, response) {
   console.log(request.body);
   // destructure variables
   let { title, descript, authors, bookshelf } = request.body;
-  let SQL4 = `UPDATE book_table SET title=$1, descript=$2, authors=$3, bookshelf_id=$4 WHERE id=$5;`;
-  let valuesagain = [title, descript, authors, bookshelf, request.params.id];
+  console.log(request.body.bookshelf);
+  let SQL5 = `select id from bookshelves where name=$1;`;
+  let valuesbookshelf = [bookshelf];
 
-  console.log(valuesagain);
-  return client.query(SQL4, valuesagain)
-    .then(response.redirect(`/books/${request.params.id}`))
+  return client.query(SQL5, valuesbookshelf)
+  .then (result => {
+    console.log(result);
+    let SQL6= `UPDATE book_table SET title=$1, descript=$2, authors=$3, bookshelf_id=$4 WHERE id=$5;`;
+    let valuesagain = [title, descript, authors, result.rows[0].id, request.params.id];
+    client.query(SQL6, valuesagain)
+    .then (response.redirect(`/books/${request.params.id}`))
     .catch((error) => {
       console.error(error);
     });
+
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
 }
 
 
 
 function findDetails(request, response) {
   //go into db and find book with unique id
-  let SQL = 'SELECT * FROM book_table WHERE id=$1;';
+  let SQL = 'SELECT * FROM book_table FULL OUTER JOIN bookshelves ON book_table.bookshelf_id = bookshelves.id WHERE book_table.id=$1;';
   let values = [request.params.id];
   //render to page details.ejs
   return client.query(SQL, values)
     .then((results) => {
-      response.render('./pages/books/details.ejs', {results: results.rows[0]});
+      console.log('this is results in findDetails function', results.rows[0])
+      // response.render('./pages/books/details.ejs', {results: results.rows[0]});
     })
     .catch(() => {
       errorHandler ('cannot find details here!', request, response);
