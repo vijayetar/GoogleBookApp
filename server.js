@@ -39,8 +39,8 @@ app.delete('/books/:id', deleteBook);
 app.use('*', notFoundHandler);
 app.use(errorHandler);
 
+///// delete book from the database
 function deleteBook (request,response){
-  // console.log('I am trying to delete this book', request.body);
   let SQL6 = `DELETE FROM book_table WHERE id=$1;`;
   let values = [request.params.id]
 
@@ -50,33 +50,38 @@ function deleteBook (request,response){
     errorHandler ('cannot delete request here!', request, response);
   });
 }
-
+///// update book in the database
 function updateBook(request, response) {
+  console.log(request.body);
   // destructure variables
   let { title, descript, authors, bookshelf } = request.body;
-  let SQL4 = `UPDATE book_table SET title=$1, descript=$2, authors=$3, bookshelf=$4 WHERE id=$5;`;
-  let valuesagain = [title, descript, authors, bookshelf, request.params.id];
 
-  client.query(SQL4, valuesagain)
-    .then(response.redirect(`./books/${request.params.id}`))
-    .catch(() => {
-      errorHandler ('cannot update book!', request, response);
+
+  let SQL6= `UPDATE book_table SET title=$1, descript=$2, authors=$3, bookshelf=$4 WHERE id=$5;`;
+    
+  let valuesagain = [title, descript, authors, bookshelf, request.params.id];
+  
+  return client.query(SQL6, valuesagain)
+    .then (response.redirect(`/books/${request.params.id}`, ))
+    .catch((error) => {
+      console.error(error);
+
     });
+
 }
 
-
-
 function findDetails(request, response) {
-  //go into db and find book with unique id
-  let SQL = 'SELECT * FROM book_table WHERE id=$1;';
+    let SQL = 'SELECT * FROM book_table WHERE id=$1;';
+
   let values = [request.params.id];
-  //render to page details.ejs
-  return client.query(SQL, values)
+
+  client.query(SQL, values)
     .then((results) => {
+      console.log('this is results in findDetails function', results.rows[0]);
       response.render('./pages/books/details.ejs', {results: results.rows[0]});
     })
-    .catch(() => {
-      errorHandler ('cannot find details here!', request, response);
+    .catch((err) => {
+      console.log('cannot find details here!', err);
     });
 }
 
@@ -125,8 +130,9 @@ function addBookToDb(request, response) {
 
   return client.query(SQL, safeValues)
     .then(result => response.redirect(`/books/${result.rows[0].id}`))
-    .catch(() => {
-      errorHandler ('So sorry outside handler here', request, response);
+    .catch((error) => {
+      // errorHandler ('So sorry outside handler here', request, response);
+      console.error(error);
     });
 }
 
@@ -162,7 +168,7 @@ function notFoundHandler(request, response){
 
 function errorHandler(error, request, response){
   console.log('Error', error);
-  response.status(500).send(error);
+  // response.status(500).send(error);
 }
 
 client.connect()
