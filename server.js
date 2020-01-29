@@ -56,6 +56,7 @@ function updateBook(request, response) {
   // destructure variables
   let { title, descript, authors, bookshelf } = request.body;
 
+
   let SQL6= `UPDATE book_table SET title=$1, descript=$2, authors=$3, bookshelf=$4 WHERE id=$5;`;
     
   let valuesagain = [title, descript, authors, bookshelf, request.params.id];
@@ -64,6 +65,7 @@ function updateBook(request, response) {
     .then (response.redirect(`/books/${request.params.id}`, ))
     .catch((error) => {
       console.error(error);
+
     });
 
 }
@@ -104,7 +106,7 @@ function collectBookSearchData (request, response){
     .then(agentResults => {
       let bookArray = agentResults.body.items;
       const booksToRender = bookArray.map(book => new CreateBook(book.volumeInfo));
-      response.status(200).render('pages/searches/show.ejs', {books: booksToRender});
+      response.status(200).render('./pages/searches/show.ejs', {books: booksToRender});
     }) .catch(error => {
       console.log('this is the catch', error);
     });
@@ -137,9 +139,9 @@ function addBookToDb(request, response) {
 //////RENDER SAVED BOOKS /////
 function showFavBooks (request, response){
   let sql3 = 'SELECT * FROM book_table;';
-  client.query(sql3)
+  return client.query(sql3)
     .then(results => {
-      response.render('pages/index', {results: results.rows});
+      response.render('./pages/index', {results: results.rows});
     })
     .catch(() => {
       errorHandler ('So sorry saved books handler here', request, response);
