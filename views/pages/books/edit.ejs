@@ -1,5 +1,5 @@
 
-<% let action = formAction === 'update' ? `/update/${results.id}?_method=PUT` : '/books'; %>
+<% let action = formAction === 'update' ? `/update/${results.id}?_method=PUT` : '/update'; %>
 
 <form action="<%= action %>" method="post">
   <input type="hidden" name="title" value="<%- results.title %>" placeholder="<%- results.title %>">

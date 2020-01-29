@@ -127,7 +127,7 @@ function addBookToDb(request, response) {
   let safeValues = [authors, title, image_url, descript];
 
   return client.query(SQL, safeValues)
-    .then(result => response.redirect(`/books/:${result.rows[0].id}`))
+    .then(result => response.redirect(`/books/${result.rows[0].id}`))
     .catch((error) => {
       // errorHandler ('So sorry outside handler here', request, response);
       console.error(error);
