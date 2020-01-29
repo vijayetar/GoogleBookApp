@@ -61,7 +61,7 @@ function updateBook(request, response) {
   let valuesagain = [title, descript, authors, bookshelf, request.params.id];
   
   return client.query(SQL6, valuesagain)
-    .then (response.redirect(`/books/${request.params.id}`))
+    .then (response.redirect(`/books/${request.params.id}`, ))
     .catch((error) => {
       console.error(error);
     });
@@ -129,7 +129,7 @@ function addBookToDb(request, response) {
   let safeValues = [authors, title, image_url, descript];
 
   return client.query(SQL, safeValues)
-    .then(result => response.redirect(`/books/${result.rows[0].id}`))
+    .then(result => response.redirect(`/books/:${result.rows[0].id}`))
     .catch((error) => {
       // errorHandler ('So sorry outside handler here', request, response);
       console.error(error);
