@@ -68,8 +68,6 @@ function updateBook(request, response) {
 
 }
 
-
-
 function findDetails(request, response) {
     let SQL = 'SELECT * FROM book_table WHERE id=$1;';
 
