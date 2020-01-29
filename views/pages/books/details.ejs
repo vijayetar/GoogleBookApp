@@ -13,7 +13,7 @@
         <li>By <%= results.authors %></li>
         <li><%= results.descript %></li>
         <li><img src="<%= results.image_url %>" alt="<%= results.title %>"></li>
-        <li>Bookshelf: <%= results.name%></li>
+        <li>Bookshelf: <%= results.bookshelf%></li>
 
     </ul>
         <%- include('edit_delete', {formAction: 'delete', results: results}) %>
