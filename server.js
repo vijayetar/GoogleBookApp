@@ -81,7 +81,7 @@ function findDetails(request, response) {
       response.render('./pages/books/details.ejs', {results: results.rows[0]});
     })
     .catch((err) => {
-      console.log('cannot find details here!', err);
+      console.error('cannot find details here!', err);
     });
 }
 
@@ -108,7 +108,7 @@ function collectBookSearchData (request, response){
       const booksToRender = bookArray.map(book => new CreateBook(book.volumeInfo));
       response.status(200).render('./pages/searches/show.ejs', {books: booksToRender});
     }) .catch(error => {
-      console.log('this is the catch', error);
+      console.error('this is the catch', error);
     });
 }
 
@@ -119,21 +119,35 @@ function showDetails(request, response) {
 }
 
 function addBookToDb(request, response) {
-  let authors = request.body.authors;
   let title = request.body.title;
-  let image_url = request.body.image_url;
-  let descript = request.body.descript;
+  let authors= request.body.authors;
+  let image_url= request.body.image_url;
+  let descript= request.body.descript;
 
-  let SQL = 'INSERT INTO book_table (authors, title, image_url, descript) VALUES ($1, $2, $3, $4) RETURNING id;';
+  let SQL1= `SELECT * FROM book_table WHERE title=$1;`;
+  let value = [title];
 
-  let safeValues = [authors, title, image_url, descript];
-
-  return client.query(SQL, safeValues)
-    .then(result => response.redirect(`/books/${result.rows[0].id}`))
-    .catch((error) => {
-      // errorHandler ('So sorry outside handler here', request, response);
-      console.error(error);
-    });
+  return client.query(SQL1, value)
+  .then(result=> {
+    console.log('this is the result.rows in the add to databse handler', result.rows);
+    if (result.rows.length>0) {
+      console.log('it exists already in the database');
+      response.redirect(`/books/${result.rows[0].id}`);
+    }
+    else {
+    let SQL2 = 'INSERT INTO book_table (authors, title, image_url, descript) VALUES ($1, $2, $3, $4) RETURNING id;';
+    let safeValues = [authors, title, image_url, descript];
+      return client.query(SQL2, safeValues)
+        .then(result => response.redirect(`/books/${result.rows[0].id}`))
+        .catch((error) => {
+        // errorHandler ('So sorry outside handler here', request, response);
+        console.error('this is inside the add to databse handler', error);
+        });
+    }
+  })
+  .catch((error) => {
+    console.error('this is outside the add to databse handler', error);
+  });
 }
 
 //////RENDER SAVED BOOKS /////
