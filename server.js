@@ -56,6 +56,8 @@ function updateBook(request, response) {
     // // destructure variables
   let { title, descript, authors, bookshelf } = request.body;
 
+  console.log('this is the bookshelf entered', request.body.bookshelf);
+
   let SQL7= `SELECT id FROM bookshelves WHERE name=$1;`;
 
   let valuesnow = [request.body.bookshelf];
@@ -155,9 +157,11 @@ function addBookToDb(request, response) {
 
 //////RENDER SAVED BOOKS /////
 function showFavBooks (request, response){
-  let sql3 = 'SELECT * FROM book_table;';
+  let sql3 = 'SELECT book_table.title, book_table.authors, book_table.image_url, book_table.descript,book_table.bookshelf_id, bookshelves.name FROM book_table FULL OUTER JOIN bookshelves ON book_table.bookshelf_id=bookshelves.id;';
+
   return client.query(sql3)
     .then(results => {
+      console.log('these are results in the home page showFavBooks function', results.rows);
       response.render('./pages/index', {results: results.rows});
     })
     .catch(() => {
