@@ -50,23 +50,28 @@ function deleteBook (request,response){
     errorHandler ('cannot delete request here!', request, response);
   });
 }
-///// update book in the database
+
+///// update book in the database new code
 function updateBook(request, response) {
-  console.log(request.body);
-  // destructure variables
+    // // destructure variables
   let { title, descript, authors, bookshelf } = request.body;
 
+  let SQL7= `SELECT id FROM bookshelves WHERE name=$1;`;
 
-  let SQL6= `UPDATE book_table SET title=$1, descript=$2, authors=$3, bookshelf=$4 WHERE id=$5;`;
-    
-  let valuesagain = [title, descript, authors, bookshelf, request.params.id];
-  
-  return client.query(SQL6, valuesagain)
-    .then (response.redirect(`/books/${request.params.id}`, ))
-    .catch((error) => {
-      console.error(error);
+  let valuesnow = [request.body.bookshelf];
 
-    });
+  return client.query(SQL7, valuesnow)
+    .then (results => {console.log('this is getting the results from bookshelves',results.rows[0].id);
+
+      let sql8=`UPDATE book_table SET bookshelf_id=$1 WHERE title=$2;`;
+      let valueshere = [results.rows[0].id, request.body.title];
+
+      return client.query(sql8, valueshere)
+      .then(response.redirect(`/`))
+      .catch(err => console.error('this is inside the second update client query'))
+
+    })
+    .catch(err => console.error('inside first update function',err));
 
 }
 
@@ -74,6 +79,8 @@ function findDetails(request, response) {
     let SQL = 'SELECT book_table.title, book_table.authors, book_table.image_url, book_table.descript,book_table.bookshelf_id, bookshelves.name FROM book_table FULL OUTER JOIN bookshelves ON book_table.bookshelf_id=bookshelves.id WHERE book_table.id=$1;';
 
   let values = [request.params.id];
+
+  console.log('this is inside the find Details function', request.params.id);
 
   client.query(SQL, values)
     .then((results) => {
@@ -113,8 +120,6 @@ function collectBookSearchData (request, response){
 }
 
 function showDetails(request, response) {
-    console.log('hi Vij, be patient');
-
   response.status(200).render('./pages/books/details.ejs');
 }
 
@@ -129,7 +134,6 @@ function addBookToDb(request, response) {
 
   return client.query(SQL1, value)
   .then(result=> {
-    console.log('this is the result.rows in the add to databse handler', result.rows);
     if (result.rows.length>0) {
       console.log('it exists already in the database');
       response.redirect(`/books/${result.rows[0].id}`);
@@ -140,7 +144,6 @@ function addBookToDb(request, response) {
       return client.query(SQL2, safeValues)
         .then(result => response.redirect(`/books/${result.rows[0].id}`))
         .catch((error) => {
-        // errorHandler ('So sorry outside handler here', request, response);
         console.error('this is inside the add to databse handler', error);
         });
     }
