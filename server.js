@@ -50,30 +50,39 @@ function deleteBook (request,response){
     errorHandler ('cannot delete request here!', request, response);
   });
 }
-///// update book in the database
+
+///// update book in the database new code
 function updateBook(request, response) {
-  console.log(request.body);
-  // destructure variables
+    // // destructure variables
   let { title, descript, authors, bookshelf } = request.body;
 
+  console.log('this is the bookshelf entered', request.body.bookshelf);
 
-  let SQL6= `UPDATE book_table SET title=$1, descript=$2, authors=$3, bookshelf=$4 WHERE id=$5;`;
-    
-  let valuesagain = [title, descript, authors, bookshelf, request.params.id];
-  
-  return client.query(SQL6, valuesagain)
-    .then (response.redirect(`/books/${request.params.id}`, ))
-    .catch((error) => {
-      console.error(error);
+  let SQL7= `SELECT id FROM bookshelves WHERE name=$1;`;
 
-    });
+  let valuesnow = [request.body.bookshelf];
+
+  return client.query(SQL7, valuesnow)
+    .then (results => {console.log('this is getting the results from bookshelves',results.rows[0].id);
+
+      let sql8=`UPDATE book_table SET bookshelf_id=$1 WHERE title=$2;`;
+      let valueshere = [results.rows[0].id, request.body.title];
+
+      return client.query(sql8, valueshere)
+      .then(response.redirect(`/`))
+      .catch(err => console.error('this is inside the second update client query'))
+
+    })
+    .catch(err => console.error('inside first update function',err));
 
 }
 
 function findDetails(request, response) {
-    let SQL = 'SELECT * FROM book_table WHERE id=$1;';
+    let SQL = 'SELECT book_table.title, book_table.authors, book_table.image_url, book_table.descript,book_table.bookshelf_id, bookshelves.name FROM book_table FULL OUTER JOIN bookshelves ON book_table.bookshelf_id=bookshelves.id WHERE book_table.id=$1;';
 
   let values = [request.params.id];
+
+  console.log('this is inside the find Details function', request.params.id);
 
   client.query(SQL, values)
     .then((results) => {
@@ -81,7 +90,7 @@ function findDetails(request, response) {
       response.render('./pages/books/details.ejs', {results: results.rows[0]});
     })
     .catch((err) => {
-      console.log('cannot find details here!', err);
+      console.error('cannot find details here!', err);
     });
 }
 
@@ -108,39 +117,51 @@ function collectBookSearchData (request, response){
       const booksToRender = bookArray.map(book => new CreateBook(book.volumeInfo));
       response.status(200).render('./pages/searches/show.ejs', {books: booksToRender});
     }) .catch(error => {
-      console.log('this is the catch', error);
+      console.error('this is the catch', error);
     });
 }
 
 function showDetails(request, response) {
-    console.log('hi Vij, be patient');
-
   response.status(200).render('./pages/books/details.ejs');
 }
 
 function addBookToDb(request, response) {
-  let authors = request.body.authors;
   let title = request.body.title;
-  let image_url = request.body.image_url;
-  let descript = request.body.descript;
+  let authors= request.body.authors;
+  let image_url= request.body.image_url;
+  let descript= request.body.descript;
 
-  let SQL = 'INSERT INTO book_table (authors, title, image_url, descript) VALUES ($1, $2, $3, $4) RETURNING id;';
+  let SQL1= `SELECT * FROM book_table WHERE title=$1;`;
+  let value = [title];
 
-  let safeValues = [authors, title, image_url, descript];
-
-  return client.query(SQL, safeValues)
-    .then(result => response.redirect(`/books/${result.rows[0].id}`))
-    .catch((error) => {
-      // errorHandler ('So sorry outside handler here', request, response);
-      console.error(error);
-    });
+  return client.query(SQL1, value)
+  .then(result=> {
+    if (result.rows.length>0) {
+      console.log('it exists already in the database');
+      response.redirect(`/books/${result.rows[0].id}`);
+    }
+    else {
+    let SQL2 = 'INSERT INTO book_table (authors, title, image_url, descript) VALUES ($1, $2, $3, $4) RETURNING id;';
+    let safeValues = [authors, title, image_url, descript];
+      return client.query(SQL2, safeValues)
+        .then(result => response.redirect(`/books/${result.rows[0].id}`))
+        .catch((error) => {
+        console.error('this is inside the add to databse handler', error);
+        });
+    }
+  })
+  .catch((error) => {
+    console.error('this is outside the add to databse handler', error);
+  });
 }
 
 //////RENDER SAVED BOOKS /////
 function showFavBooks (request, response){
-  let sql3 = 'SELECT * FROM book_table;';
+  let sql3 = 'SELECT book_table.title, book_table.authors, book_table.image_url, book_table.descript,book_table.bookshelf_id, bookshelves.name FROM book_table FULL OUTER JOIN bookshelves ON book_table.bookshelf_id=bookshelves.id;';
+
   return client.query(sql3)
     .then(results => {
+      console.log('these are results in the home page showFavBooks function', results.rows);
       response.render('./pages/index', {results: results.rows});
     })
     .catch(() => {
