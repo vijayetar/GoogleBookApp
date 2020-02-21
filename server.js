@@ -71,7 +71,7 @@ function updateBook(request, response) {
 }
 
 function findDetails(request, response) {
-    let SQL = 'SELECT * FROM book_table WHERE id=$1;';
+    let SQL = 'SELECT book_table.title, book_table.authors, book_table.image_url, book_table.descript,book_table.bookshelf_id, bookshelves.name FROM book_table FULL OUTER JOIN bookshelves ON book_table.bookshelf_id=bookshelves.id WHERE book_table.id=$1;';
 
   let values = [request.params.id];
 
